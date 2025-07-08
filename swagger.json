@@ -1,0 +1,255 @@
+{
+    "openapi": "3.0.0",
+    "paths": {
+        "/orders": {
+            "get": {
+                "operationId": "OrdersController_getAll",
+                "parameters": [{
+                    "name": "clientId",
+                    "required": true,
+                    "in": "query",
+                    "schema": {
+                        "example": 1230,
+                        "type": "string"
+                    }
+                }, {
+                    "name": "paymentMethod",
+                    "required": true,
+                    "in": "query",
+                    "schema": {
+                        "example": "Cash",
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/OrderVM"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": ["Orders"]
+            },
+            "post": {
+                "operationId": "OrdersController_create",
+                "parameters": [],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateOrderDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderVM"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": ["Orders"]
+            }
+        },
+        "/orders/{id}": {
+            "get": {
+                "operationId": "OrdersController_getById",
+                "parameters": [{
+                    "name": "id",
+                    "required": true,
+                    "in": "path",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderVM"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": ["Orders"]
+            },
+            "put": {
+                "operationId": "OrdersController_update",
+                "parameters": [{
+                    "name": "id",
+                    "required": true,
+                    "in": "path",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateOrderDto"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrderVM"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                },
+                "tags": ["Orders"]
+            },
+            "delete": {
+                "operationId": "OrdersController_delete",
+                "parameters": [{
+                    "name": "id",
+                    "required": true,
+                    "in": "path",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                },
+                "tags": ["Orders"]
+            }
+        }
+    },
+    "info": {
+        "title": "Nest Project API Title",
+        "description": "API description",
+        "version": "1.0",
+        "contact": {}
+    },
+    "tags": [],
+    "servers": [],
+    "components": {
+        "schemas": {
+            "OrderVM": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": 1230
+                    },
+                    "amount": {
+                        "type": "number",
+                        "example": 1230
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "example": 1230
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "example": 1230
+                    },
+                    "clientId": {
+                        "type": "number",
+                        "example": 1230
+                    },
+                    "paymentMethod": {
+                        "type": "string",
+                        "example": "Cash"
+                    }
+                },
+                "required": ["id", "amount", "longitude", "latitude", "clientId", "paymentMethod"]
+            },
+            "CreateOrderDto": {
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "type": "number",
+                        "example": 1230
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "example": 1230
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "example": 1230
+                    },
+                    "clientId": {
+                        "type": "number",
+                        "example": 1230
+                    },
+                    "paymentMethod": {
+                        "type": "string",
+                        "example": "Cash"
+                    }
+                },
+                "required": ["amount", "longitude", "latitude", "clientId", "paymentMethod"]
+            },
+            "UpdateOrderDto": {
+                "type": "object",
+                "properties": {
+                    "amount": {
+                        "type": "number",
+                        "example": 1230
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "example": 1230
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "example": 1230
+                    },
+                    "clientId": {
+                        "type": "number",
+                        "example": 1230
+                    },
+                    "paymentMethod": {
+                        "type": "string",
+                        "example": "Cash"
+                    }
+                },
+                "required": ["amount", "longitude", "latitude", "clientId", "paymentMethod"]
+            },
+            "Error": {
+                "type": "object",
+                "properties": {}
+            }
+        }
+    }
+}
