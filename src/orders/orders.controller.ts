@@ -25,8 +25,12 @@ export class OrdersController {
     @ApiResponse({ status: 200, type: [OrderVM] })
     @Get()
     getAll(@Query() query: GetOrdersDto): OrderVM[] {
-        const clientId = query.clientId ? Number(query.clientId) : undefined;
-        return this.ordersService.getAll(clientId, query.paymentMethod);
+        if (Object.keys(query).length) {
+            const orders = this.ordersService.getAll(query);
+            return orders.map(order => new OrderVM(order));
+        }
+        const orders = this.ordersService.getAll({});
+        return orders.map(order => new OrderVM(order));
     }
 
     @ApiResponse({ status: 200, type: OrderVM })

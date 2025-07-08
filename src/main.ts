@@ -2,10 +2,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { writeFileSync } from 'fs';
+import { ValidationPipe } from '@nestjs/common';
+
+require('dotenv').config();
 // import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // class-validator package for (validation)
 
   const config = new DocumentBuilder()
     .setTitle('Nest Project API Title')
@@ -32,6 +37,7 @@ async function bootstrap() {
   SwaggerModule.setup('swagger', app, document);
 
   // const configService = app.get(ConfigService);
+  app.useGlobalPipes(new ValidationPipe());
 
   // const port = configService.get<number>('PORT') || 3000;
 

@@ -3,24 +3,35 @@ import { CreateOrderDto } from './dtos/create-order.dto';
 import { UpdateOrderDto } from './dtos/update-order.dto';
 import { PaymentMethod } from './enums/payment-method.enum';
 import { Order } from './entities/order.entity';
-import { orders as data } from './data/data'; // ✅ تأكد من المسار
+import { orders as data } from './data/data';
 import { v4 as uuid } from 'uuid';
+import { OrderVM } from './vms/order.vm';
+import { GetOrdersDto } from './dtos/get-orders.dto';
 
 @Injectable()
 export class OrdersService {
     private orders: Order[] = data;
 
-    getAll(clientId?: number, paymentMethod?: PaymentMethod): Order[] {
-        let result = this.orders;
-        if (clientId) result = result.filter(o => o.clientId === clientId);
-        if (paymentMethod) result = result.filter(o => o.paymentMethod === paymentMethod);
-        return result;
+    getAll(filters: Partial<GetOrdersDto>): Order[] {
+        if (Object.keys(filters).length) {
+            let result = this.orders;
+            if (filters.clientId) {
+                result = result.filter(o => String(o.clientId) === String(filters.clientId));
+            }
+            if (filters.paymentMethod) {
+                result = result.filter(o => o.paymentMethod === filters.paymentMethod);
+            }
+            return result;
+        }
+        return this.orders;
     }
 
-    getById(id: string): Order {
+
+    getById(id: string): OrderVM {
+
         const found = this.orders.find(o => o.id === id);
         if (!found) throw new NotFoundException('Order not found');
-        return found;
+        return new OrderVM(found);
     }
 
     create(dto: CreateOrderDto): Order {
