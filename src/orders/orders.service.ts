@@ -1,16 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import { v4 as uuid } from 'uuid';
 import { orders as data } from './data/data';
 import { CreateOrderDto } from './dtos/create-order.dto';
 import { GetOrdersDto } from './dtos/get-orders.dto';
 import { UpdateOrderDto } from './dtos/update-order.dto';
 import { Order } from './entities/order.entity';
-import { OrderVM } from './vms/order.vm';
 import { OrdersRepository } from './repositories/order.repository';
+import { OrderVM } from './vms/order.vm';
 
 @Injectable()
 export class OrdersService {
-    constructor(private ordersRepository: OrdersRepository) { }
+    constructor(
+        @InjectRepository(OrdersRepository)
+        private ordersRepository: OrdersRepository
+    ) { }
     private orders: Order[] = data;
 
     getAll(filters: Partial<GetOrdersDto>): Order[] {
