@@ -48,9 +48,7 @@ export class OrdersController {
     @ApiResponse({ status: 404, type: Error })
     @Put(':id')
     async update(@Param('id') id: string, @Body() request: UpdateOrderDto): Promise<OrderVM> {
-        const updatedOrder = await this.ordersService.update(id, request);
-        if (!updatedOrder) throw new Error('Order not found');
-        return updatedOrder;
+        return await this.ordersService.update(id, request);
     }
 
     @ApiResponse({ status: 204 })

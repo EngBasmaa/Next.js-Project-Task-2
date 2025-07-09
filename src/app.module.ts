@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
-import { OrdersModule } from './orders/orders.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { LoggerModule } from './logger/logger.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
-  imports: [OrdersModule,
+  imports: [
+    LoggerModule,
+    OrdersModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -12,7 +15,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       password: 'Hbosy@2020',
       database: 'orders-management',
       autoLoadEntities: true,
-      synchronize: true
+      synchronize: true,
+      logging: true
     })
   ],
 })

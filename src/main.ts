@@ -1,8 +1,10 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { writeFileSync } from 'fs';
 import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { writeFileSync } from 'fs';
+import { AppModule } from './app.module';
+import { LoggingInterceptor } from './interceptors/logging.interceptor';
+import { CustomLogger } from './logger/custom.logger';
 
 require('dotenv').config();
 // import { ConfigService } from '@nestjs/config';
@@ -38,6 +40,10 @@ async function bootstrap() {
 
   // const configService = app.get(ConfigService);
   app.useGlobalPipes(new ValidationPipe());
+
+  // Add global logging interceptor
+  const logger = app.get(CustomLogger);
+  app.useGlobalInterceptors(new LoggingInterceptor(logger));
 
   // const port = configService.get<number>('PORT') || 3000;
 
