@@ -6,7 +6,7 @@ import { UpdateOrderDto } from '../dtos/update-order.dto';
 import { Order } from '../entities/order.entity';
 
 @Injectable()
-export class OrdersRepository extends Repository<Order> {
+export class OrdersRepository {
 
     private repo: Repository<Order>;
 
