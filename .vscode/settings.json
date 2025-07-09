@@ -1,0 +1,44 @@
+{
+  "editor.tabCompletion": "on",
+  "debug.console.acceptSuggestionOnEnter": "off",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.fixAll.eslint": true,
+    "source.organizeImports": true
+  },
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnType": true,
+  "eslint.validate": ["typescript"],
+  "eslint.alwaysShowStatus": true,
+  "eslint.autoFixOnSave": true,
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  "typescript.suggest.autoImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.suggest.includeCompletionsForModuleExports": true,
+  "typescript.suggest.includeCompletionsWithSnippetText": true,
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
+  },
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.acceptSuggestionOnCommitCharacter": true,
+  "editor.acceptSuggestionOnEnter": "on",
+  "editor.snippetSuggestions": "top",
+  "editor.wordBasedSuggestions": "off",
+  "files.autoSave": "onFocusChange",
+  "files.autoSaveDelay": 1000,
+  "emmet.includeLanguages": {
+    "typescript": "html"
+  },
+  "emmet.triggerExpansionOnTab": true,
+  "breadcrumbs.enabled": true,
+  "editor.minimap.enabled": true,
+  "editor.renderWhitespace": "boundary",
+  "editor.rulers": [80, 120],
+  "workbench.colorCustomizations": {
+    "editorError.foreground": "#ff0000",
+    "editorWarning.foreground": "#ffa500"
+  }
+}

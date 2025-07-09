@@ -1,8 +1,8 @@
 // dto/get-orders.dto.ts
-import { IsOptional, IsEnum, IsNumberString } from 'class-validator';
-import { PaymentMethod } from '../enums/payment-method.enum';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
+import { IsEnum, IsNumberString, IsOptional } from 'class-validator';
+import { PaymentMethod } from '../enums/payment-method.enum';
 
 export class GetOrdersDto {
     @ApiProperty({ example: 1230, required: false })
