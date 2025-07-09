@@ -15,12 +15,15 @@ export class OrderVM {
     @ApiProperty({ example: PaymentMethod.CASH })
     paymentMethod: PaymentMethod;
 
-    constructor(order: any) {
-        this.id = order.id;
-        this.amount = order.amount;
-        this.longitude = order.longitude;
-        this.latitude = order.latitude;
-        this.clientId = order.clientId;
-        this.paymentMethod = order.paymentMethod;
-    }
+    // i used (Object.assign) instead of using (constructor):
+    // عشان لو مش عاوز لعتمد على كونستراكتور معين
+
+    // constructor(order: any) {
+    //     this.id = order.id;
+    //     this.amount = order.amount;
+    //     this.longitude = order.longitude;
+    //     this.latitude = order.latitude;
+    //     this.clientId = order.clientId;
+    //     this.paymentMethod = order.paymentMethod;
+    // }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CreateOrderDto } from '../dtos/create-order.dto';
 import { GetOrdersDto } from '../dtos/get-orders.dto';
 import { UpdateOrderDto } from '../dtos/update-order.dto';
@@ -8,11 +8,7 @@ import { Order } from '../entities/order.entity';
 @Injectable()
 export class OrdersRepository {
 
-    private repo: Repository<Order>;
-
-    constructor(private readonly dataSource: DataSource) {
-        this.repo = dataSource.getRepository(Order);
-    }
+    constructor(private readonly repo: Repository<Order>) { }
 
     async createOrder(createDto: CreateOrderDto): Promise<Order> {
         const order = this.repo.create({
@@ -71,7 +67,7 @@ export class OrdersRepository {
     }
 
     async updateOrder(id: string, updateOrderDto: UpdateOrderDto): Promise<Order | null> {
-        const order = await this.repo.findOneBy({ id });
+        const order = await this.repo.findOne({ where: { id } });
         if (order) {
             if (updateOrderDto.amount !== undefined) order.amount = updateOrderDto.amount;
             if (updateOrderDto.longitude !== undefined) order.longitude = updateOrderDto.longitude;

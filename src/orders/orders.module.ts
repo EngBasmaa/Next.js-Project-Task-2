@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
-import { OrdersService } from './orders.service';
-import { OrdersController } from './orders.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { OrdersRepository } from './repositories/order.repository';
+import { Order } from './entities/order.entity';
+import { OrdersController } from './orders.controller';
+import { OrdersService } from './orders.service';
 
 @Module({
   controllers: [OrdersController],
   providers: [OrdersService],
-  imports: [TypeOrmModule.forFeature([OrdersRepository])],
+  imports: [TypeOrmModule.forFeature([Order])], // registeration to enable dependency injection of repositories
 })
 export class OrdersModule { }

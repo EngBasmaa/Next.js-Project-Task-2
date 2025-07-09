@@ -4,7 +4,7 @@ import { PaymentMethod } from '../enums/payment-method.enum';
 
 @Entity('orders')
 export class Order {
-  @PrimaryGeneratedColumn() // '1','2','3', ....
+  // @PrimaryGeneratedColumn() // '1','2','3', ....
   @PrimaryGeneratedColumn('uuid')  // random long string
   id: string;
 

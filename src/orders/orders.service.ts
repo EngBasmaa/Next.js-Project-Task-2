@@ -1,64 +1,75 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { v4 as uuid } from 'uuid';
-import { orders as data } from './data/data';
+import { Repository } from 'typeorm';
 import { CreateOrderDto } from './dtos/create-order.dto';
 import { GetOrdersDto } from './dtos/get-orders.dto';
 import { UpdateOrderDto } from './dtos/update-order.dto';
 import { Order } from './entities/order.entity';
-import { OrdersRepository } from './repositories/order.repository';
 import { OrderVM } from './vms/order.vm';
 
 @Injectable()
 export class OrdersService {
     constructor(
-        @InjectRepository(OrdersRepository)
-        private ordersRepository: OrdersRepository
+        @InjectRepository(Order)
+        private ordersRepository: Repository<Order>
     ) { }
-    private orders: Order[] = data;
 
-    getAll(filters: Partial<GetOrdersDto>): Order[] {
+    async getAll(filters: Partial<GetOrdersDto>): Promise<Order[]> {
         if (Object.keys(filters).length) {
-            let result = this.orders;
+            const query = this.ordersRepository.createQueryBuilder('order');
+
             if (filters.clientId) {
-                result = result.filter(o => String(o.clientId) === String(filters.clientId));
+                query.andWhere('order.clientId = :clientId', { clientId: filters.clientId });
             }
             if (filters.paymentMethod) {
-                result = result.filter(o => o.paymentMethod === filters.paymentMethod);
+                query.andWhere('order.paymentMethod = :paymentMethod', { paymentMethod: filters.paymentMethod });
             }
-            return result;
+
+            return await query.getMany();
         }
-        return this.orders;
+        return await this.ordersRepository.find();
     }
 
-
-    getById(id: string): OrderVM {
-
-        const found = this.orders.find(o => o.id === id);
+    async getById(id: string): Promise<OrderVM> {
+        const found = await this.ordersRepository.findOne({ where: { id } });
         if (!found) throw new NotFoundException('Order not found');
-        return new OrderVM(found);
+        return Object.assign(new OrderVM(), found);
     }
 
-    create(dto: CreateOrderDto): Order {
-        const newOrder: Order = {
-            id: uuid(),
-            ...dto,
-        };
-        this.orders.push(newOrder);
-        return newOrder;
+    async create(dto: CreateOrderDto): Promise<OrderVM> {
+        const newOrder = this.ordersRepository.create({
+            amount: dto.amount,
+            longitude: dto.longitude,
+            latitude: dto.latitude,
+            clientId: dto.clientId,
+            paymentMethod: dto.paymentMethod,
+        });
+
+        const savedOrder = await this.ordersRepository.save(newOrder);
+        return Object.assign(new OrderVM(), savedOrder);
     }
 
-    update(id: string, dto: UpdateOrderDto): Order {
-        const order = this.getById(id);
-        const updated = { ...order, ...dto };
-        const index = this.orders.findIndex(o => o.id === id);
-        this.orders[index] = updated;
-        return updated;
+    async update(id: string, dto: UpdateOrderDto): Promise<OrderVM> {
+        const order = await this.ordersRepository.findOne({ where: { id } });
+        if (!order) {
+            throw new NotFoundException('Order not found');
+        }
+
+        // Update only provided fields
+        if (dto.amount !== undefined) order.amount = dto.amount;
+        if (dto.longitude !== undefined) order.longitude = dto.longitude;
+        if (dto.latitude !== undefined) order.latitude = dto.latitude;
+        if (dto.clientId !== undefined) order.clientId = dto.clientId;
+        if (dto.paymentMethod !== undefined) order.paymentMethod = dto.paymentMethod;
+
+        const updatedOrder = await this.ordersRepository.save(order);
+        return Object.assign(new OrderVM(), updatedOrder);
     }
 
-    delete(id: string): void {
-        const index = this.orders.findIndex(o => o.id === id);
-        if (index === -1) throw new NotFoundException('Order not found');
-        this.orders.splice(index, 1);
+    async delete(id: string): Promise<void> {
+        const deleteResult = await this.ordersRepository.delete({ id });
+        if (deleteResult.affected === 0) {
+            throw new NotFoundException('Order not found');
+        }
     }
 }

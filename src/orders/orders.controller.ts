@@ -1,22 +1,20 @@
 import {
-    Controller,
-    Get,
-    Post,
     Body,
-    Param,
+    Controller,
     Delete,
-    Query,
-    Put,
+    Get,
     HttpCode,
-    HttpStatus,
+    Param,
+    Post,
+    Put,
+    Query
 } from '@nestjs/common';
-import { OrdersService } from './orders.service';
-import { CreateOrderDto } from './dtos/create-order.dto';
-import { UpdateOrderDto } from './dtos/update-order.dto';
-import { OrderVM } from './vms/order.vm';
-import { GetOrdersDto } from './dtos/get-orders.dto';
 import { ApiResponse } from '@nestjs/swagger';
-
+import { CreateOrderDto } from './dtos/create-order.dto';
+import { GetOrdersDto } from './dtos/get-orders.dto';
+import { UpdateOrderDto } from './dtos/update-order.dto';
+import { OrdersService } from './orders.service';
+import { OrderVM } from './vms/order.vm';
 
 @Controller('orders')
 export class OrdersController {
@@ -24,41 +22,41 @@ export class OrdersController {
 
     @ApiResponse({ status: 200, type: [OrderVM] })
     @Get()
-    getAll(@Query() query: GetOrdersDto): OrderVM[] {
+    async getAll(@Query() query: GetOrdersDto): Promise<OrderVM[]> {
         if (Object.keys(query).length) {
-            const orders = this.ordersService.getAll(query);
-            return orders.map(order => new OrderVM(order));
+            const orders = await this.ordersService.getAll(query);
+            return orders.map(order => Object.assign(new OrderVM(), order));
         }
-        const orders = this.ordersService.getAll({});
-        return orders.map(order => new OrderVM(order));
+        const orders = await this.ordersService.getAll({});
+        return orders.map(order => Object.assign(new OrderVM(), order));
     }
 
     @ApiResponse({ status: 200, type: OrderVM })
     @Get(':id')
-    getById(@Param('id') id: string): OrderVM {
-        return this.ordersService.getById(id);
+    async getById(@Param('id') id: string): Promise<OrderVM> {
+        return await this.ordersService.getById(id);
     }
 
     @ApiResponse({ status: 201, type: OrderVM }) // for swagger
     @Post()
     @HttpCode(201) // for nest
-    create(@Body() request: CreateOrderDto): OrderVM {
-        return this.ordersService.create(request);
+    async create(@Body() request: CreateOrderDto): Promise<OrderVM> {
+        return await this.ordersService.create(request);
     }
 
     @ApiResponse({ status: 201, type: OrderVM })
     @ApiResponse({ status: 404, type: Error })
     @Put(':id')
-    update(@Param('id') id: string, @Body() request: UpdateOrderDto): OrderVM {
-        const updatedOrder = this.ordersService.update(id, request);
+    async update(@Param('id') id: string, @Body() request: UpdateOrderDto): Promise<OrderVM> {
+        const updatedOrder = await this.ordersService.update(id, request);
         if (!updatedOrder) throw new Error('Order not found');
-        return updatedOrder
+        return updatedOrder;
     }
 
     @ApiResponse({ status: 204 })
     @Delete(':id')
     @HttpCode(204)
-    delete(@Param('id') id: string) {
-        this.ordersService.delete(id);
+    async delete(@Param('id') id: string): Promise<void> {
+        await this.ordersService.delete(id);
     }
 }
